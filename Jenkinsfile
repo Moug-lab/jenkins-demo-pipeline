@@ -22,6 +22,16 @@ pipeline {
                 sh 'python3 -m pytest test_app.py -v'
             }
         }
+        stage('Parallel Checks') {
+            parallel {
+                stage('Lint') {
+                    steps { sh 'echo "Pretend linting..." && sleep 2' }
+                }
+                stage('Security Scan') {
+                    steps { sh 'echo "Pretend security scan..." && sleep 2' }
+                }
+            }
+        }
         stage('Build') {
             steps {
                 sh 'python3 app.py'
