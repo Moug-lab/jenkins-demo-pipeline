@@ -12,6 +12,13 @@ pipeline {
                 echo 'Code already present in workspace (local demo).'
             }
         }
+        stage('Use Secret Safely') {
+            steps {
+                withCredentials([string(credentialsId: 'demo-secret-text', variable: 'MY_SECRET')]) {
+                    sh 'echo "The secret length is: ${#MY_SECRET}"'
+                }
+            }
+        }
         stage('Install') {
             steps {
                 sh 'python3 -m pip install --break-system-packages pytest || true'
