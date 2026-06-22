@@ -12,6 +12,7 @@ pipeline {
                 echo 'Code already present in workspace (local demo).'
             }
         }
+
         stage('Use Secret Safely') {
             steps {
                 withCredentials([string(credentialsId: 'demo-secret-text', variable: 'MY_SECRET')]) {
@@ -19,11 +20,13 @@ pipeline {
                 }
             }
         }
+
         stage('Install') {
             steps {
                 sh 'python3 -m pip install --break-system-packages pytest || true'
             }
         }
+
         stage('Isolated Python Test') {
             agent {
                 docker { image 'python:3.11-slim' }
@@ -32,11 +35,13 @@ pipeline {
                 sh 'pip install pytest && pytest --version'
             }
         }
+
         stage('Test') {
             steps {
                 sh 'python3 -m pytest test_app.py -v'
             }
-      
+        }   // ⭐ THIS BRACE WAS MISSING
+
         stage('Parallel Checks') {
             parallel {
                 stage('Lint') {
@@ -47,16 +52,19 @@ pipeline {
                 }
             }
         }
+
         stage('Build') {
             steps {
                 sh 'python3 app.py'
             }
         }
-         stage('Docker Build') {
+
+        stage('Docker Build') {
             steps {
                 sh 'docker build -t demo-pipeline:${BUILD_NUMBER} .'
             }
         }
+
         stage('Docker Run') {
             steps {
                 sh 'docker run --rm demo-pipeline:${BUILD_NUMBER}'
