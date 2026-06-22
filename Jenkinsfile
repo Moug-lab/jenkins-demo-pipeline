@@ -24,11 +24,6 @@ pipeline {
                 sh 'python3 -m pip install --break-system-packages pytest || true'
             }
         }
-        stage('Test') {
-            steps {
-                sh 'python3 -m pytest test_app.py -v'
-            }
-        }
         stage('Isolated Python Test') {
             agent {
                 docker { image 'python:3.11-slim' }
@@ -37,6 +32,11 @@ pipeline {
                 sh 'pip install pytest && pytest --version'
             }
         }
+        stage('Test') {
+            steps {
+                sh 'python3 -m pytest test_app.py -v'
+            }
+      
         stage('Parallel Checks') {
             parallel {
                 stage('Lint') {
