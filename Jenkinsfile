@@ -44,6 +44,16 @@ pipeline {
                 sh 'python3 app.py'
             }
         }
+         stage('Docker Build') {
+            steps {
+                sh 'docker build -t demo-pipeline:${BUILD_NUMBER} .'
+            }
+        }
+        stage('Docker Run') {
+            steps {
+                sh 'docker run --rm demo-pipeline:${BUILD_NUMBER}'
+            }
+        }
     }
 
     post {
