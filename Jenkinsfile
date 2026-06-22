@@ -29,6 +29,14 @@ pipeline {
                 sh 'python3 -m pytest test_app.py -v'
             }
         }
+        stage('Isolated Python Test') {
+            agent {
+                docker { image 'python:3.11-slim' }
+            }
+            steps {
+                sh 'pip install pytest && pytest --version'
+            }
+        }
         stage('Parallel Checks') {
             parallel {
                 stage('Lint') {
